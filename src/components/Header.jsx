@@ -1,19 +1,21 @@
+// src/components/Header.jsx
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { AppBar, Toolbar, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu'; // MUIのメニューアイコン
 
 function Header() {
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          あなたの名前
-        </Typography>
-        <Button color="inherit">About</Button>
-        <Button color="inherit">Skills</Button>
-        <Button color="inherit">Contact</Button>
+    <AppBar position="static" sx={{ background: 'none', boxShadow: 'none', marginBottom: '20px' }}>
+      <Toolbar sx={{ justifyContent: 'flex-end', paddingRight: 0 }}>
+        <IconButton
+          size="large"
+          edge="end"
+          color="inherit" // デフォルトのアイコン色
+          aria-label="menu"
+          sx={{ color: '#1A2A44' }} // アイコンの色を濃い青に設定
+        >
+          <MenuIcon />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
