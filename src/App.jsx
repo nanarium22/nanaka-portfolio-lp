@@ -9,14 +9,14 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#243258',
+      main: '#243258', // 濃い青
     },
     secondary: {
-      main: '#007df5',
+      main: '#007df5', // 明るい青
     },
     background: {
-      default: '#fcfdf9',
-      paper: '#fcfdf9',
+      default: '#fcfdf9', // 背景の白
+      paper: '#fcfdf9', // カードの背景色
     },
   },
   typography: {
@@ -29,7 +29,7 @@ const theme = createTheme({
     h6: {
       fontSize: '1rem',
       fontWeight: 'bold',
-      color: '#1A2A44',
+      color: '#243258', // 濃い青
     },
   },
   components: {
@@ -52,7 +52,7 @@ function Header({ toggleDrawer, sections }) {
           edge="end"
           color="inherit"
           aria-label="menu"
-          sx={{ color: '#1A2A44' }}
+          sx={{ color: '#243258' }} // 濃い青
           onClick={toggleDrawer(true)}
         >
           <MenuIcon />
@@ -93,10 +93,10 @@ function ProfileSection({ name, handleName }) {
           width: 100,
           height: 100,
           margin: '0 auto 10px auto',
-          border: '3px solid #1A2A44',
+          border: '3px solid #243258', // 濃い青
         }}
       />
-      <Typography variant="h6" sx={{ color: '#1A2A44', fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ color: '#243258', fontWeight: 'bold' }}>
         {name} {handleName}
       </Typography>
     </Box>
@@ -114,14 +114,14 @@ function CardSection({ title, children, isLarge = false, id }) {
         padding: '0 8px',
         zIndex: 1,
         fontSize: '0.9rem',
-        color: '#1A2A44',
+        color: '#243258', // 濃い青
         fontWeight: 'normal',
       }}>
         {title}
       </Typography>
       <Paper sx={{
         padding: '30px 20px 20px',
-        border: '2px solid #1A2A44',
+        border: '2px solid #243258', // 濃い青
         position: 'relative',
         minHeight: isLarge ? '250px' : '120px',
         backgroundColor: 'background.paper',
@@ -133,7 +133,7 @@ function CardSection({ title, children, isLarge = false, id }) {
           left: '5px',
           right: '5px',
           bottom: '5px',
-          border: '2px solid #4A90E2',
+          border: '2px solid #007df5', // 明るい青
           pointerEvents: 'none',
         },
       }}>
@@ -154,11 +154,12 @@ function WorksSection({ title, id }) {
             <Box sx={{
               width: '100%',
               height: '150px',
-              backgroundColor: '#D0D0D0',
+              backgroundColor: '#fcfdf9', // 背景の白
+              border: '2px solid #007df5', // 明るい青の枠線
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#666',
+              color: '#243258', // 濃い青
               borderRadius: '4px',
               cursor: 'pointer'
             }}>
@@ -197,14 +198,14 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{
-        backgroundColor: '#EEEEEE',
+        backgroundColor: '#fcfdf9', // 背景の白
         minHeight: '100vh',
-        padding: { xs: '10px', sm: '20px 0' },
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
       }}>
-        <Container maxWidth="lg">
+        <Container maxWidth={false} sx={{ padding: '0 16px' }}>
           <Header toggleDrawer={toggleDrawer} sections={sections} />
           <ProfileSection name="井口奈々花" handleName="/Mille" />
           <CardSection id="affiliation" title="所属 / 活動">
