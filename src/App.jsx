@@ -1,23 +1,22 @@
-import React from 'react';
-import { Box, Container, CssBaseline, Typography, Paper, AppBar, Toolbar, IconButton, Avatar } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Container, CssBaseline, Typography, Paper, AppBar, Toolbar, IconButton, Avatar, Drawer, List, ListItem, ListItemButton, ListItemText, Grid } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-// カスタムテーマの定義
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#243258', // 濃い青色
+      main: '#243258',
     },
     secondary: {
-      main: '#007df5', // 水色
+      main: '#007df5',
     },
     background: {
-      default: '#fcfdf9', // 全体の背景色
-      paper: '#fcfdf9', // カードの背景色
+      default: '#fcfdf9',
+      paper: '#fcfdf9',
     },
   },
   typography: {
@@ -44,10 +43,9 @@ const theme = createTheme({
   },
 });
 
-// 各セクションのコンポーネントを統合
-function Header() {
+function Header({ toggleDrawer, sections }) {
   return (
-    <AppBar position="static" sx={{ background: 'none', boxShadow: 'none', marginBottom: '20px' }}>
+    <AppBar position="static" sx={{ background: 'none', boxShadow: 'none' }}>
       <Toolbar sx={{ justifyContent: 'flex-end', paddingRight: 0 }}>
         <IconButton
           size="large"
@@ -55,21 +53,39 @@ function Header() {
           color="inherit"
           aria-label="menu"
           sx={{ color: '#1A2A44' }}
+          onClick={toggleDrawer(true)}
         >
           <MenuIcon />
         </IconButton>
       </Toolbar>
+      <Drawer
+        anchor="right"
+        open={sections.drawerOpen}
+        onClose={toggleDrawer(false)}
+      >
+        <List>
+          {sections.names.map((text) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton onClick={() => {
+                const element = document.getElementById(sections.ids[text]);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+                toggleDrawer(false)();
+              }}>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
     </AppBar>
   );
 }
 
 function ProfileSection({ name, handleName }) {
   return (
-    <Box sx={{
-      textAlign: 'center',
-      marginBottom: '40px',
-      marginTop: '-60px',
-    }}>
+    <Box id="profile" sx={{ textAlign: 'center', marginBottom: '40px', marginTop: '-60px' }}>
       <Avatar
         alt={name}
         src="https://placehold.co/100x100/A2D2FF/000000?text=Profile"
@@ -87,9 +103,9 @@ function ProfileSection({ name, handleName }) {
   );
 }
 
-function CardSection({ title, children, isLarge = false }) {
+function CardSection({ title, children, isLarge = false, id }) {
   return (
-    <Box sx={{ marginBottom: '20px', position: 'relative' }}>
+    <Box id={id} sx={{ marginBottom: '20px', position: 'relative' }}>
       <Typography variant="h6" sx={{
         position: 'absolute',
         top: '-15px',
@@ -127,60 +143,78 @@ function CardSection({ title, children, isLarge = false }) {
   );
 }
 
-function WorksSection({ title }) {
+function WorksSection({ title, id }) {
+  const workItems = Array.from({ length: 7 }, (_, i) => i + 1);
+
   return (
-    <CardSection title={title}>
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '80px',
-      }}>
-        <IconButton color="primary">
-          <ArrowBackIosIcon />
-        </IconButton>
-        <Box sx={{
-          width: '150px',
-          height: '80px',
-          backgroundColor: '#D0D0D0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#666',
-          borderRadius: '4px',
-          margin: '0 10px',
-        }}>
-          <Typography variant="body2">作品プレビュー</Typography>
-        </Box>
-        <IconButton color="primary">
-          <ArrowForwardIosIcon />
-        </IconButton>
-      </Box>
+    <CardSection title={title} id={id}>
+      <Grid container spacing={2}>
+        {workItems.map((item) => (
+          <Grid item xs={12} sm={6} md={4} lg={4} key={item}>
+            <Box sx={{
+              width: '100%',
+              height: '150px',
+              backgroundColor: '#D0D0D0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#666',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}>
+              <Typography variant="body2">作品 {item}</Typography>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
     </CardSection>
   );
 }
 
-// メインのAppコンポーネント
 function App() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  const sections = {
+    drawerOpen: drawerOpen,
+    names: ['プロフィール', '所属 / 活動', '制作物', 'スキル', '働きたいこと'],
+    ids: {
+      'プロフィール': 'profile',
+      '所属 / 活動': 'affiliation',
+      '制作物': 'works',
+      'スキル': 'skills',
+      '働きたいこと': 'work-goals'
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{
         backgroundColor: '#EEEEEE',
         minHeight: '100vh',
-        padding: '20px 0',
+        padding: { xs: '10px', sm: '20px 0' },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}>
-        <Container maxWidth="sm">
-          <Header />
+        <Container maxWidth="lg">
+          <Header toggleDrawer={toggleDrawer} sections={sections} />
           <ProfileSection name="井口奈々花" handleName="/Mille" />
-          <CardSection title="所属 / 活動">
+          <CardSection id="affiliation" title="所属 / 活動">
             <Typography variant="body1">お茶の水女子大学</Typography>
           </CardSection>
-          <WorksSection title="製作物" />
-          <CardSection title="スキル">
+          <WorksSection id="works" title="制作物" />
+          <CardSection id="skills" title="スキル">
             <Typography variant="body1">ここにあなたのスキルを記述します。</Typography>
           </CardSection>
-          <CardSection title="働きたいこと">
+          <CardSection id="work-goals" title="働きたいこと">
             <Typography variant="body1">ここにあなたが働きたいことを記述します。</Typography>
           </CardSection>
         </Container>
